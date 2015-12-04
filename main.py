@@ -24,7 +24,6 @@ class MasterpieceWriter(object):
         self.word_pair_counts = Counter()
 
     def _paragraphs_from_file(self, file_name):
-        sys.stderr.write("Reading from file {0}\n".format(file_name))
         with open(file_name) as f:
             for line in f:
                 line = line.strip()
@@ -76,8 +75,8 @@ class MasterpieceWriter(object):
                 prev_prev_word, prev_word = prev_word, word
 
     def stats(self, top=10):
-        return self.word_counts.most_common(top), \
-               self.word_pair_counts.most_common(top)
+        return dict(most_common_words=self.word_counts.most_common(top),
+                    most_common_word_pairs=self.word_pair_counts.most_common(top))
 
     def generate_masterpiece(self, prng=None):
         yield PARA_BEGIN
@@ -132,7 +131,7 @@ if __name__ == "__main__":
                         help="Length of the masterpiece (in words).")
     parser.add_argument("--show_top_words", type=int, default=100, nargs="?",
                         help="Display this much most commonly used words.")
-    parser.add_argument("--training_set", nargs="*", default="texts/asimov",
+    parser.add_argument("--training_set", nargs="*", default="texts",
                         help="List of files to train on.")
 
     args = parser.parse_args()
